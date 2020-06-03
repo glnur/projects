@@ -24,13 +24,3 @@ You are free to add your custom fonts.
 On the start all fonts' examples will be printed for "abc" text.
 After choosing which font do you want to use,
 Type a text (sentence or word) that later will be printed with a chosen font.
-For example:
-You have chosen Hashtag font
-
-Your text to be written with custom font: hello
-# # ### #   #    #  
-# # #   #   #   # # 
-### ##  #   #   # # 
-# # #   #   #   # # 
-# # ### ### ###  #  
-
