@@ -9,10 +9,11 @@ We have a List class that contains head and tail pointers to ListNode objects.
 ListNode object contains pointers to previous, next and random ListNode object and string value named data.
 By calling .Serialize() method, we save current List object state in the file in binary format.
 After that we can do whatever we want with a List object:
-Add more ListNodes
-Pop ListNodes from the end
-Serialize/Deserialize List
-Show List content
+1) Add more ListNodes
+2) Pop ListNodes from the end
+3) Serialize/Deserialize List
+4) Show List content
+
 By calling .Deserialize() method, we recover saved List object state from the file,
 I.e all our actions with List object after last .Serialize() method call will be reversed.
 
