@@ -1,5 +1,4 @@
 #include "list.h"
-#include "windows.h"
 
 #include <string>
 #include <conio.h>
@@ -20,11 +19,6 @@ static std::string FileForSerialization{"C:\\Temp\\test.txt"};
 
 int main()
 {
-    _CrtMemState sOld;
-    _CrtMemState sNew;
-    _CrtMemState sDiff;
-    _CrtMemCheckpoint(&sOld); //take a snapchot
-
     List list;
     bool doQuit{false};
 
