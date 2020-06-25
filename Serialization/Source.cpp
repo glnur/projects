@@ -81,7 +81,7 @@ int main()
                 std::cout << std::endl << "Deserialized list from " << FileForSerialization << std::endl;
                 break;
             }
-            case '5':
+            case '5': // Show List
             {
                 std::cout << std::endl << "List contains: " << std::endl;
                 if (list.count == 0)
@@ -96,7 +96,7 @@ int main()
                 }
                 break;
             }
-            case '6':
+            case '6': // Change file for serialization
             {
                 std::cout << std::endl << "Please enter full(absolute, for example C:\\Test\\test.txt) file path (or leave line empty not to change current file)" << std::endl;
 
@@ -131,7 +131,7 @@ int main()
                 }
                 break;
             }
-            case '7':
+            case '7': // Exit
             {
                 std::cout << "Exiting..." << std::endl;
                 doQuit = true;
