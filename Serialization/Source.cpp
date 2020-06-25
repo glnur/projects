@@ -45,7 +45,7 @@ int main()
             case '1': // Add
             {
                 std::string valueToAdd;
-                std::cout << "Enter the value to add to the List (empty by default)" << std::endl;
+                std::cout << std::endl << "Enter the value to add to the List (empty by default)" << std::endl;
                 std::cin >> valueToAdd;
                 list.Add(valueToAdd);
                 break;
@@ -84,6 +84,12 @@ int main()
             case '5':
             {
                 std::cout << std::endl << "List contains: " << std::endl;
+                if (list.count == 0)
+                {
+                    std::cout << "List is empty" << std::endl;
+                    break;
+                }
+
                 for (auto it = list.head; it; it = it->next)
                 {
                     std::cout << "value " << it->data << "; random pointer points to node with value " << (it->rand ? it->rand->data : "NULL") << std::endl;
@@ -97,6 +103,7 @@ int main()
                 bool isPathAbsolute = false;
                 while (!isPathAbsolute)
                 {
+                    std::cin.ignore();
                     std::string filePathString;
                     getline(std::cin, filePathString);
                     if (filePathString.empty()) // leave current file
