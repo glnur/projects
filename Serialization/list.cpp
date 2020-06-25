@@ -13,7 +13,7 @@ List::List()
 
 void List::Serialize(FILE* file) // save to file (file is opened via fopen(path, "wb"))
 {
-    std::string binaryCount{ std::bitset<sizeof(decltype(count)) * 8>(count).to_string() };
+    const std::string binaryCount{std::bitset<sizeof(decltype(count)) * 8>(count).to_string()};
     fwrite(binaryCount.c_str(), sizeof(char), binaryCount.size(), file);
 
     const char endLine[]{ "\n" };
@@ -123,25 +123,27 @@ void List::Deserialize(FILE* file) // save to file (file is opened via fopen(pat
 
 void List::Pop()
 {
-    if (!tail)
+    if (count == 0)
     {
         std::cout << "Nothing to pop. List is empty" << std::endl;
         return;
     }
 
-    std::cout << "Popped Node with value " << tail->data << std::endl;
-    if (tail == head)
+    std::cout << "Popping Node with value " << tail->data << std::endl;
+    if (tail == head) // only 1 ListNode in List
     {
         head = tail = nullptr;
-        return;
     }
-
-    tail = tail->prev;
-    if (tail->rand == tail->next)
+    else
     {
-        tail->rand = nullptr;
+        tail = tail->prev;
+        if (tail->rand == tail->next)
+        {
+            tail->rand = nullptr;
+        }
+        tail->next = nullptr;
     }
-    tail->next = nullptr;
+    --count;
 }
 
 void List::Add(const std::string& data)
