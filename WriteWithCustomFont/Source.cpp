@@ -31,6 +31,11 @@ public:
     {
         boost::system::error_code ec;
         m_xmlFile = (fs::current_path(ec) / "fonts.xml").string();
+        if (!fs::is_regular_file(m_xmlFile, ec))
+        {
+            std::cout << "Could not find file " << m_xmlFile << std::endl;
+            exit(EXIT_FAILURE);
+        }
     }
 
     const size_t& GetLength() const
@@ -50,16 +55,9 @@ public:
 
     void ShowAllFontsExamples()
     {
-        pt::ptree tree;
-        boost::system::error_code ec;
-        if (!fs::is_regular_file(m_xmlFile, ec))
-        {
-            std::cout << "Could not find file " << m_xmlFile << std::endl;
-            return;
-        }
-
         try
         {
+            pt::ptree tree;
             pt::read_xml(m_xmlFile, tree);
             int i = 1;
             for (const auto& fonts : tree.get_child("fonts"))
