@@ -43,11 +43,6 @@ public:
         return m_length;
     }
 
-    const size_t& GetHeight() const
-    {
-        return m_height;
-    }
-
     const std::string& GetFont() const
     {
         return m_font;
@@ -111,7 +106,6 @@ public:
         {
             pt::read_xml(m_xmlFile, tree);
             m_length = tree.get("fonts." + fontName + ".<xmlattr>.length", 0);
-            m_height = tree.get("fonts." + fontName + ".<xmlattr>.height", 0);
             m_font = tree.get("fonts." + fontName, "");
         }
         catch (const std::exception& e)
@@ -123,11 +117,6 @@ public:
         if (m_length == 0)
         {
             std::cout << "Please specify your fonts length in " << m_xmlFile << std::endl;
-            return false;
-        }
-        else if (m_height == 0)
-        {
-            std::cout << "Please specify your fonts height in " << m_xmlFile << std::endl;
             return false;
         }
         else if (boost::trim_copy(m_font).empty())
@@ -150,7 +139,6 @@ public:
 
 private:
     unsigned m_length;
-    unsigned m_height;
     std::string m_font;
     std::string m_xmlFile;
 };
@@ -183,8 +171,8 @@ int main()
     std::cout << "Please enter the id of which font do you want to choose" << std::endl;
 
     CutomFontName chosenFont;
-    int chosenFontId = 0;
-    bool isNotValidFontId = true;
+    int chosenFontId{0};
+    bool isNotValidFontId{true};
     while (isNotValidFontId)
     {
         chosenFontId = GETCH;
@@ -217,11 +205,12 @@ int main()
     std::getline(std::cin, text);
 
     std::map<int, std::string> asciiToArt;
-    std::istringstream iss(font.GetFont());
+    std::istringstream iss{font.GetFont()};
     std::string row;
+    bool isFirstLine{true};
     while (getline(iss, row))
     {
-        for (size_t i = 0; i < row.size(); i += font.GetLength())
+        for (size_t i = 0u; i < row.size(); i += font.GetLength())
         {
             uint8_t letterId = i / font.GetLength();
             for (size_t j = i; j < i + font.GetLength(); ++j)
@@ -233,17 +222,14 @@ int main()
             asciiToArt[97 + letterId] += "\n";
         }
 
-        // Fill space symbol with GetLength() * GetHeight() ' ' symbols
+        // Fill space symbol with GetLength() * height ' ' symbols
         asciiToArt[32] += std::string(font.GetLength(), ' ');
         asciiToArt[32] += "\n";
-    }
 
-    for (size_t h = 0; h < font.GetHeight(); ++h)
-    {
         std::unordered_set<int> uniqueSymbolsInLine;
         for (const auto& symbol : text)
         {
-            int symbolId = (int)symbol;
+            int symbolId{(int)symbol};
             // Print ? symbol for all non-latin symbols except space
             if ((symbolId < 65 || (symbolId > 90 && symbolId < 95) || symbolId > 122) && symbolId != 32/*space*/)
             {
@@ -251,7 +237,9 @@ int main()
             }
 
             std::string& letter = asciiToArt[symbolId];
-            if ((h != 0) && (uniqueSymbolsInLine.find(symbolId) == uniqueSymbolsInLine.end()))
+            // Our letter string is just one long line full of symbols,
+            // So on every row we print exactly GetLength() symbols and erase previous GetLength() number of symbols on the next row
+            if (!isFirstLine && (uniqueSymbolsInLine.find(symbolId) == uniqueSymbolsInLine.end()))
             {
                 letter.erase(0, font.GetLength() + 1);
                 uniqueSymbolsInLine.insert(symbolId);
@@ -259,6 +247,7 @@ int main()
             std::cout << letter.substr(0, font.GetLength());
         }
         std::cout << std::endl;
+        isFirstLine = false;
     }
 
     return 0;
