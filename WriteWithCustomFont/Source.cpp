@@ -10,11 +10,11 @@ int main()
     {
         return 1;
     }
-    
+
     std::cout << std::endl << "Your text to be written with custom font: ";
     std::string text;
     std::getline(std::cin, text);
     font.WriteMessage(text);
-    
+
     return 0;
 }

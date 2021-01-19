@@ -105,6 +105,7 @@ bool CustomFont::Load(const std::string fontName)
         return false;
     }
 
+    // Not using boost::trim because there letters can start with space symbols
     if (m_font.front() == '\n')
     {
         m_font.erase(m_font.begin());
@@ -120,29 +121,32 @@ bool CustomFont::Load(const std::string fontName)
 void CustomFont::WriteMessage(const std::string& message)
 {
     std::map<int, std::string> asciiToArt;
-    std::istringstream iss{GetFont()};
+    std::istringstream allLetters{GetFont()};
     std::string row;
     bool isFirstLine{true};
-    while (getline(iss, row))
+    while (getline(allLetters, row))
     {
         for (size_t i = 0u; i < row.size(); i += GetLength())
         {
             uint8_t letterId = i / GetLength();
+
             for (size_t j = i; j < i + GetLength(); ++j)
             {
+                // both lower-case and upper-case letters will be printed in upper-case
                 asciiToArt[65 + letterId] += std::string(1, row[j]);
                 asciiToArt[97 + letterId] += std::string(1, row[j]);
             }
+            // 65 is 'a' and 97 is 'A' in ascii
             asciiToArt[65 + letterId] += "\n";
             asciiToArt[97 + letterId] += "\n";
         }
 
-        // Fill space symbol with GetLength() * height ' ' symbols
+        // Whitespace between letters is one empty custom font's length symbol
         asciiToArt[32] += std::string(GetLength(), ' ');
         asciiToArt[32] += "\n";
 
         std::unordered_set<int> uniqueSymbolsInLine;
-        for (const auto& symbol : message)
+        for (const auto& symbol: message)
         {
             int symbolId{(int)symbol};
             // Print ? symbol for all non-latin symbols except space
