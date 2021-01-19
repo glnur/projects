@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <atomic>
 #include <boost/property_tree/ptree.hpp>
 
 namespace fonts
@@ -22,6 +23,8 @@ protected:
     const size_t& GetLength() const;
     const std::string& GetFont() const;
 
+    static std::atomic<bool> s_isChoosing;
+
 protected:
     std::vector<std::string> m_fontList;
 
@@ -33,6 +36,6 @@ private:
     bool m_isLoaded{false};
 };
 
-} // fonst
+} // fonts
 
 #endif // CUSTOM_FONT_HEADER

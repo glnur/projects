@@ -40,6 +40,14 @@ CustomFont::CustomFont()
 std::string CustomFont::ChooseManually()
 {
     ShowAllFontsExamples();
+
+    if (s_isChoosing)
+    {
+        std::cout << "Another manual choosing is in progress. Please finish it first" << std::endl;
+        return std::string();
+    }
+    s_isChoosing = true;
+
     std::cout << "Please enter the id of which font do you want to choose" << std::endl;
 
     int chosenFontId{0};
@@ -56,11 +64,18 @@ std::string CustomFont::ChooseManually()
     }
 
     std::cout << "You have chosen " << m_fontList[--chosenFontId] << " font" << std::endl;
+    s_isChoosing = false;
     return m_fontList[chosenFontId];
 }
 
 bool CustomFont::Load(const std::string fontName)
 {
+    if (fontName.empty())
+    {
+        std::cout << "Please specify your font name when loading it." << std::endl;
+        return false;
+    }
+
     boost::system::error_code ec;
     if (!fs::is_regular_file(m_xmlFile, ec))
     {
@@ -196,5 +211,7 @@ const std::string& CustomFont::GetFont() const
 
     return m_font;
 }
+
+/*static*/ std::atomic<bool> CustomFont::s_isChoosing{false};
 
 } // fonts
