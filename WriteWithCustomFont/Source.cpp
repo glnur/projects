@@ -15,6 +15,6 @@ int main()
     std::string text;
     std::getline(std::cin, text);
     font.WriteMessage(text);
-    
+
     return 0;
 }
