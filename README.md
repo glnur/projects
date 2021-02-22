@@ -26,3 +26,13 @@ You are free to add your custom fonts.
 On the start all fonts' examples will be printed for "abc" text.
 After choosing which font do you want to use,
 Type a text (sentence or word) that later will be printed with a chosen font.
+
+3)
+Name: Running bot
+
+Description:
+There are a player and bot on the map.
+You can control the player with WASD.
+Bot is always chasing the player.
+In this version there is no end in the game, just press ESC when you want to exit.
+In the next commit obstacles will be added to map and bot will start to use Dijkstra's algorithm to move.
