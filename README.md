@@ -33,6 +33,7 @@ Name: Running bot
 Description:
 There are a player and bot on the map.
 You can control the player with WASD.
+Player has ability to swap his position with bot. Press Spacebar to trigger it.
 Bot is always chasing the player.
 In this version there is no end in the game, just press ESC when you want to exit.
 In the next commit obstacles will be added to map and bot will start to use Dijkstra's algorithm to move.

@@ -4,6 +4,8 @@
 #include <conio.h>
 #include <chrono>
 
+constexpr static char obstacleSymbol{'#'};
+
 namespace actor {
 
 Actor::Actor(const int x, const int y)
@@ -21,7 +23,24 @@ const int Actor::GetYPos() const
 	return m_y;
 }
 
-Player::Player() : Actor(game::Game::s_mapSizeX >> 1, game::Game::s_mapSizeY >> 1) {} // spawn player in the middle
+char Actor::s_charToShow;
+char Player::s_charToShow;
+char Bot::s_charToShow;
+
+Player::Player()
+	: Actor(game::Game::s_mapSizeX >> 1, game::Game::s_mapSizeY >> 1) // spawn player in the middle
+{
+	s_charToShow = 'P';
+}
+
+void Player::Swap(Bot& bot, std::wstring& map)
+{
+	std::swap(m_x, bot.m_x);
+	std::swap(m_y, bot.m_y);
+
+	map[m_x * game::Game::s_mapSizeX + m_y] = s_charToShow;
+	map[bot.m_x * game::Game::s_mapSizeX + bot.m_y] = bot.s_charToShow;
+}
 
 void Player::Move(std::wstring& map)
 {
@@ -35,31 +54,31 @@ void Player::Move(std::wstring& map)
 		switch (_getch())
 		{
 		case 'w':
-			if (map[(m_x - 1) * game::Game::s_mapSizeX + m_y] != '#')
+			if (map[(m_x - 1) * game::Game::s_mapSizeX + m_y] != obstacleSymbol)
 			{
 				removeLastPlayerPos();
-				map[--m_x * game::Game::s_mapSizeX + m_y] = 'P';
+				map[--m_x * game::Game::s_mapSizeX + m_y] = s_charToShow;
 			}
 			break;
 		case 'a':
-			if (map[m_x * game::Game::s_mapSizeX + m_y - 1] != '#')
+			if (map[m_x * game::Game::s_mapSizeX + m_y - 1] != obstacleSymbol)
 			{
 				removeLastPlayerPos();
-				map[m_x * game::Game::s_mapSizeX + --m_y] = 'P';
+				map[m_x * game::Game::s_mapSizeX + --m_y] = s_charToShow;
 			}
 			break;
 		case 's':
-			if (map[(m_x + 1) * game::Game::s_mapSizeX + m_y] != '#')
+			if (map[(m_x + 1) * game::Game::s_mapSizeX + m_y] != obstacleSymbol)
 			{
 				removeLastPlayerPos();
-				map[++m_x * game::Game::s_mapSizeX + m_y] = 'P';
+				map[++m_x * game::Game::s_mapSizeX + m_y] = s_charToShow;
 			}
 			break;
 		case 'd':
-			if (map[m_x * game::Game::s_mapSizeX + m_y + 1] != '#')
+			if (map[m_x * game::Game::s_mapSizeX + m_y + 1] != obstacleSymbol)
 			{
 				removeLastPlayerPos();
-				map[m_x * game::Game::s_mapSizeX + ++m_y] = 'P';
+				map[m_x * game::Game::s_mapSizeX + ++m_y] = s_charToShow;
 			}
 			break;
 		default:
@@ -71,7 +90,8 @@ void Player::Move(std::wstring& map)
 Bot::Bot(Player& playerToFollow)
 	: Actor(rand() % game::Game::s_mapSizeX, rand() % game::Game::s_mapSizeY) // spawn bot in random place
 {
-	m_playerToFollow = &playerToFollow;
+	m_playerToFollow.reset(&playerToFollow);
+	s_charToShow = 'B';
 }
 
 void Bot::Move(std::wstring& map) // TODO: change to Dijkstra's algorithm
@@ -102,7 +122,7 @@ void Bot::Move(std::wstring& map) // TODO: change to Dijkstra's algorithm
 	{
 		++m_y;
 	}
-	map[m_x * game::Game::s_mapSizeX + m_y] = 'B';
+	map[m_x * game::Game::s_mapSizeX + m_y] = Bot::s_charToShow;
 }
 
 } // actor

@@ -2,6 +2,7 @@
 #define PLAYER_HEADER
 
 #include <string>
+#include <memory>
 
 namespace actor {
 
@@ -17,14 +18,21 @@ public:
 
 protected:
 	int m_x, m_y;
+	static char s_charToShow;
 };
+
+class Bot;
 
 class Player : public Actor
 {
 public:
 	Player();
 
+	void Swap(Bot& bot, std::wstring& map);
 	void Move(std::wstring& map) final;
+
+protected:
+	static char s_charToShow;
 };
 
 class Bot : public Actor
@@ -34,8 +42,11 @@ public:
 
 	void Move(std::wstring& map) final;
 
+	friend Player;
+
 protected:
-	Player* m_playerToFollow;
+	std::unique_ptr<Player> m_playerToFollow;
+	static char s_charToShow;
 };
 
 } // actor
