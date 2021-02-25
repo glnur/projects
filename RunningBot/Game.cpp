@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <thread>
+#include <conio.h>
+#include <chrono>
 
 #include "Game.h"
 #include "Actor.h"
@@ -37,12 +40,29 @@ void Game::Run()
 	m_map[m_player.GetXPos() * s_mapSizeX + m_player.GetYPos()] = 'P';
 	m_map[m_bot.GetXPos() * s_mapSizeX + m_bot.GetYPos()] = 'B';
 
+	bool gameOver{false};
+	const auto swapPlayerWithBot = [&]()
+	{
+		while (!gameOver)
+		{
+			if (GetAsyncKeyState(VK_SPACE))
+			{
+				m_player.Swap(m_bot, m_map);
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+	};
+	std::thread ifSwapNeeded(swapPlayerWithBot);
+
 	while (!GetAsyncKeyState(VK_ESCAPE))
 	{
 		m_player.Move(m_map);
 		m_bot.Move(m_map);
 		Draw();
 	}
+
+	gameOver = true;
+	ifSwapNeeded.join();
 }
 
 void Game::Draw()
