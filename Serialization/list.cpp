@@ -56,14 +56,17 @@ void List::Deserialize(FILE* file) // save to file (file is opened via fopen(pat
 
     // Read length
     char lengthBinaryStr[arraySize] = "";
-    size_t length = 0;
     if (fgets(lengthBinaryStr, arraySize, file) == NULL)
     {
+        delete[] lengthBinaryStr;
         return;
     }
+
+    size_t length = 0;
     length = std::bitset<SizeTSize>(lengthBinaryStr).to_ulong();
     if (length == 0)
     {
+        delete[] lengthBinaryStr;
         return;
     }
     fgetc(file); //  to skip end-of-line symbol "\n"
@@ -114,11 +117,16 @@ void List::Deserialize(FILE* file) // save to file (file is opened via fopen(pat
 
         if (strlen(randIdStr) == SizeTSize) // if there is a saved rand reference
         {
-            unsigned long randId = std::bitset<SizeTSize>(randIdStr).to_ulong();
+            const unsigned long randId = std::bitset<SizeTSize>(randIdStr).to_ulong();
             it->rand = nodes[randId];
             fgetc(file); //  to skip end-of-line symbol "\n"
         }
+
+        delete[] myChar;
+        delete[] randIdStr;
     }
+
+    delete[] lengthBinaryStr;
 }
 
 void List::Pop()
