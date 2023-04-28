@@ -123,6 +123,9 @@ void List::Deserialize(FILE* file) // save to file (file is opened via fopen(pat
 
 void List::Pop()
 {
+    // TODO if Insert() func to any place in the list will be implemented
+    // Need to validate each ListNode's rand
+
     if (count == 0)
     {
         std::cout << "Nothing to pop. List is empty" << std::endl;
@@ -132,15 +135,13 @@ void List::Pop()
     std::cout << "Popping Node with value " << tail->data << std::endl;
     if (tail == head) // only 1 ListNode in List
     {
+        delete tail;
         head = tail = nullptr;
     }
     else
     {
         tail = tail->prev;
-        if (tail->rand == tail->next)
-        {
-            tail->rand = nullptr;
-        }
+        delete tail->next;
         tail->next = nullptr;
     }
     --count;
@@ -151,7 +152,7 @@ void List::Add(const std::string& data)
     ListNode* newNode = InsertNode(data);
 
     // Initialize rand pointer with randomly chosen ListNode
-    const unsigned randId = rand() % (count + 1) + 1; // + 1 to count for NULL value chance
+    const unsigned randId = rand() % (count + 1); // + 1 to count for nullptr
     newNode = head; // pointer for tail->rand to point
     tail->rand = nullptr;
 
